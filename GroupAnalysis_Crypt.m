@@ -202,7 +202,7 @@ for iG = 1:length(Groups)
                                     Data(imeas).Sinkonset(istim).(layer{ilay}),...
                                     40, 1000, 1); % 40 sinks, 1000 dur, 1 ms after click start detection
                             
-                            end %which stim
+                            end %which click stim
                             
                             if contains(para{ipar},'RMS') || contains(para{ipar},'PeakAmp')
                                 

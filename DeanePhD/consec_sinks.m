@@ -1,7 +1,21 @@
 function structout = consec_sinks(structin, sinkonset_struct, num_sinks, dur_stim, start_time)
+% This function searches through the detected sink data from step 1 of the
+% analysis (Dynamic_CSD). It brings in the detected parameter (eg.
+% SinkRMS) and the detected SinkOnset for the measurement for which is was
+% called (either AM or Click). 
+
+% num_sinks is the number of stimuli (eg. 2 Hz) that we want to detect 
+% sink data for, dur_stim is the duration of the full stimulus window 
+% (1000 ms), start_time is our arbitrary time after stim onset to detect  
+% sink onset. I use 1 ms to be very liberal with my detection window. 
+
+% If the time between stimuli is greater than 90 ms, we cap the detection 
+% of onset to that. This is also very liberal to account for later onset in
+% supragranular layers. 
+
 
 if ~exist('start_time','var')
-    start_time = 1; % 3 ms to avoid that the sink starts directly at 0 ms
+    start_time = 1; % 1 ms to avoid that the sink starts directly at 0 ms
 end
 if ~exist('num_sinks','var')
     num_sinks  = 2;
@@ -20,12 +34,12 @@ det_off    = nan(1,num_sinks);
 det_jump   = dur_stim/num_sinks;
 
 if det_jump > 90
-    det_dur = 90; % so that onset detection window is 3:65 ms
+    det_dur = 90; % so that onset detection window is 1:90 ms (longer window to account for I_II)
 else
-    det_dur = det_jump - 1; % 1 ms space between detection windows 
+    det_dur = det_jump - 1; % 1 ms space between detection windows for higher click frqz
 end
 
-% fill detection window containers
+% fill detection window containers (eg. 2 hz -> det_on=[1,501] det_off=[91,591])
 for idet = 1:num_sinks
     if idet == 1
         det_on(idet) = start_time;

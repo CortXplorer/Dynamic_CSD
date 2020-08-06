@@ -68,7 +68,7 @@ for i_In = 1:entries
     % 5 figures per animal
     for iLay = 1:length(layers)
         
-        h = figure('Name',['Avrec_Clicks_' layers{iLay} '_' name],'Position',[-1080 100 1080 1200]);
+        h = figure('Name',['Avrec_Clicks_' layers{iLay} '_' name],'Position',[10 10 1080 1200]);
         
         for iStim = 1:length(CLstimlist)
             % create container for lables
