@@ -8,6 +8,13 @@ function ChangeInAvrec(homedir)
 %Input:     D:\MyCode\Dynamic_CSD_Analysis\DATA -> *DATA.mat
 %Output:    Figures of in "ChangeIn_Avrec"
 
+%Output:    Figures of in "Single_Avrec" Figures coming out are for Click and
+%           Spontaneous measurements currently. Data out are for Click and
+%           Spont as *.mat files for each type of measurement in 
+%           fig/"Group_Avrec". mat files contain sorted AVREC data and the 
+%           first peak amp detected for each AVREC. These are for
+%           normalization and averaging in group scripts (next step)
+
 %% standard operations
 warning('OFF');
 dbstop if error

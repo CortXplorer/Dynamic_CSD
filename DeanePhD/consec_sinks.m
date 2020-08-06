@@ -1,7 +1,7 @@
 function structout = consec_sinks(structin, sinkonset_struct, num_sinks, dur_stim, start_time)
 % This function searches through the detected sink data from step 1 of the
 % analysis (Dynamic_CSD). It brings in the detected parameter (eg.
-% SinkRMS) and the detected SinkOnset for the measurement for which is was
+% SinkRMS) and the detected SinkOnset for the measurement for which it was
 % called (either AM or Click). 
 
 % num_sinks is the number of stimuli (eg. 2 Hz) that we want to detect 
@@ -11,7 +11,9 @@ function structout = consec_sinks(structin, sinkonset_struct, num_sinks, dur_sti
 
 % If the time between stimuli is greater than 90 ms, we cap the detection 
 % of onset to that. This is also very liberal to account for later onset in
-% supragranular layers. 
+% supragranular layers. If the time between stimuli is shorter, we cap 
+% detection at 1 ms before the next AM or Click stim
+
 
 
 if ~exist('start_time','var')

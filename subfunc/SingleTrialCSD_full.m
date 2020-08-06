@@ -3,6 +3,16 @@ function [SingleRec_preAVREC,Rec_preAVREC,AvgFP, SingleTrialFP, AvgCSD,...
     SingleTrialRelResCSD, AvgRelResCSD,AvgAbsResCSD,...
     SingleTrialAbsResCSD, SingleLayerRelRes, AvgLayerRelRes] =...
     SingleTrialCSD_full(SWEEP,chan_order,chan,n_SamplesPreevent,kernel,chan_dist)
+% This function filters the raw LFP signal to calculate CSD, AVREC, RelRes,
+% and AbsRes at an average level, single trial level, and in some cases, as
+% a channel average or channel inclusive
+
+% clarifications: 
+% SingleRec_preAVREC: single rectified CSD meant to be pre AVREC
+% calculation for single trial layer-wise AVREC
+% Rec_preAVREC: rectified CSD meant to be pre layer-wise AVREC
+% AvgFP, SingleTrialFP: LFP, single trial LFP
+
 %% check inputs
 if ~exist('kernel','var') % filter parameters based on kernel width
      kernel   = 300; %450 also preferred by some

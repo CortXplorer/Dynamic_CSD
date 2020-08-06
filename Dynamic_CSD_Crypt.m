@@ -2,16 +2,14 @@ function Dynamic_CSD_Crypt(homedir)
 %% Dynamic CSD for sinks I_II through VI; incl. single
 
 %   This script takes input from the groups and raw folders. It calculates 
-%   and stores CSD information in Data struct which is
-%   saved in the DATA folder. 
+%   and stores CSD, sinks, AVREC, LFP, Relres, and basic information in a 
+%   Data struct per animal (eg KIT03_Data.mat) which is saved in the DATA 
+%   folder. 
 % 
-%   Sinks list takes into account the smaller mouse cortex compared to
+%   The sinks list takes into account the smaller mouse cortex compared to
 %   gerbils. (I_II, IV, V, VI)
 %   IMPORTANT: DO NOT change sink list here. If you need another set of
-%   sinks then create a SEPARATE and UNIQUELY NAMED script. 
-% 
-%   CHANGE if needed: add your working directory to the try/catch; change
-%   condition to run 
+%   sinks then create a SEPARATE and UNIQUELY NAMED script.
 
 %% standard operations
 warning('OFF');
