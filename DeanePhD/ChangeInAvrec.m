@@ -46,6 +46,7 @@ AvrecAll = cell(length(CLstimlist),length(layers),entries);
 PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
+PeakData = array2table(zeros(0,6));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -96,7 +97,7 @@ for i_In = 1:entries
                 
                 % take an average of all channels (already averaged across trials)
                 if contains(layers{iLay}, 'All')
-                    avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}); % KED change this when you rerun the dynamic script
+                    avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}); 
                 else
                     avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:));
                 end
@@ -108,10 +109,22 @@ for i_In = 1:entries
                 % store this avg temporarily with buddies
                 allmeas = vertcat(allmeas,avgchan);
                 
-                % store peak if preCL condition
+                % store peak if preCL condition - only for normalization in
+                % next step!
                 if contains(CondN{1,iMeas},'preCL')
                     PeakofPre(iStim,iLay,i_In) = max(avgchan);
                 end
+                
+                % if stim is 2 or 5 hz, pull out consecutive peak data
+                if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
+                    [peakout,latencyout] = consec_peaks(avgchan, ...
+                        CLstimlist(iStim), 1000, 1);
+                    
+                    CurPeakData = table({name}, {layers{iLay}}, {Data(iMeas).Condition},...
+                        CLstimlist(iStim), {peakout}, {latencyout});
+                    PeakData = [PeakData; CurPeakData];
+                end
+                
             end
             
             % and store the lot
@@ -135,7 +148,7 @@ for i_In = 1:entries
     end
     
     
-        %% Amplitude Modulation
+        %% Amplitude Modulation ---- copy over consec peak stuff when you start using this
         
     %     for iAn = 1:length(names)
     %         % 1 figure per animal
@@ -270,8 +283,16 @@ for i_In = 1:entries
     cd(homedir); cd DATA;
 end
 
+% give the table variable names after everything is collected
+PeakData.Properties.VariableNames = {'Animal','Layer','Measurement',...
+    'ClickFreq','PeakAmp','PeakLat'};
+
 % save it out
 cd (homedir),cd figs;
 mkdir Group_Avrec; cd Group_Avrec;
 save('AvrecAll','AvrecAll','PeakofPre');
 save('Spont_AvrecAll','SP_AvrecAll','SP_PeakofPre');
+% save the table in the main folder - needs to be moved to the Julia folder
+% for stats
+cd(homedir)
+writetable(PeakData,'AVRECPeakData.csv')
