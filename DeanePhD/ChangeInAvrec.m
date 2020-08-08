@@ -46,7 +46,7 @@ AvrecAll = cell(length(CLstimlist),length(layers),entries);
 PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
-PeakData = array2table(zeros(0,6));
+PeakData = array2table(zeros(0,8));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -119,10 +119,12 @@ for i_In = 1:entries
                 if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
                     [peakout,latencyout] = consec_peaks(avgchan, ...
                         CLstimlist(iStim), 1000, 1);
-                    
-                    CurPeakData = table({name}, {layers{iLay}}, {Data(iMeas).Condition},...
-                        CLstimlist(iStim), {peakout}, {latencyout});
-                    PeakData = [PeakData; CurPeakData];
+                    for itired = 1:CLstimlist(iStim)
+                        CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
+                            {Data(iMeas).Condition},CLstimlist(iStim), ...
+                            {itired}, peakout(itired), latencyout(itired));
+                        PeakData = [PeakData; CurPeakData];
+                    end
                 end
                 
             end
@@ -284,8 +286,8 @@ for i_In = 1:entries
 end
 
 % give the table variable names after everything is collected
-PeakData.Properties.VariableNames = {'Animal','Layer','Measurement',...
-    'ClickFreq','PeakAmp','PeakLat'};
+PeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
+    'ClickFreq','OrderofClick','PeakAmp','PeakLat'};
 
 % save it out
 cd (homedir),cd figs;
