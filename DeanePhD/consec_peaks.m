@@ -45,6 +45,6 @@ for iSti = 1:num_stim
     % find peak power and peak latency
     peakout(iSti) =  nanmax(nanmax(det_win));
     [~,latencyout(iSti)] = find(det_win == peakout(iSti));
-    latencyout(iSti) = latencyout(iSti) + det_on(iSti) - BL;
+    latencyout(iSti) = latencyout(iSti);
      
 end

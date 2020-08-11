@@ -119,10 +119,10 @@ for i_In = 1:entries
                 if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
                     [peakout,latencyout] = consec_peaks(avgchan, ...
                         CLstimlist(iStim), 1000, 1);
-                    for itired = 1:CLstimlist(iStim)
+                    for itab = 1:CLstimlist(iStim)
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
-                            {itired}, peakout(itired), latencyout(itired));
+                            {itab}, peakout(itab), latencyout(itab));
                         PeakData = [PeakData; CurPeakData];
                     end
                 end
