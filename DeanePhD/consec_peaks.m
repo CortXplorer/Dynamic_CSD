@@ -13,7 +13,7 @@ if ~exist('dur_stim','var')
     dur_stim   = 1000;
 end
 
-% structin   = Data(imeas).(para{ipar})(istim).(layer{ilay});
+% spectin should be one avrec trace on which to detect peaks (e.g. 1:1400)
 
 %preallocation of onset detection window containers
 peakout    = nan(1,num_stim);
@@ -45,6 +45,5 @@ for iSti = 1:num_stim
     % find peak power and peak latency
     peakout(iSti) =  nanmax(nanmax(det_win));
     [~,latencyout(iSti)] = find(det_win == peakout(iSti));
-    latencyout(iSti) = latencyout(iSti);
      
 end
