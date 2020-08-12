@@ -46,7 +46,7 @@ AvrecAll = cell(length(CLstimlist),length(layers),entries);
 PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
-PeakData = array2table(zeros(0,8));
+PeakData = array2table(zeros(0,9));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -117,12 +117,22 @@ for i_In = 1:entries
                 
                 % if stim is 2 or 5 hz, pull out consecutive peak data
                 if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
-                    [peakout,latencyout] = consec_peaks(avgchan, ...
+                    [peakout,latencyout,rmsout] = consec_peaks(avgchan, ...
                         CLstimlist(iStim), 1000, 1);
+                    if iStim == 1
+                        plot(latencyout(1)+200,peakout(1),'o')
+                        plot(latencyout(2)+700,peakout(2),'o')
+                    elseif iStim == 2
+                        plot(latencyout(1)+200,peakout(1),'o')
+                        plot(latencyout(2)+400,peakout(2),'o')
+                        plot(latencyout(3)+600,peakout(3),'o')
+                        plot(latencyout(4)+800,peakout(4),'o')
+                        plot(latencyout(5)+1000,peakout(5),'o')
+                    end
                     for itab = 1:CLstimlist(iStim)
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
-                            {itab}, peakout(itab), latencyout(itab));
+                            {itab}, peakout(itab), latencyout(itab),rmsout(itab));
                         PeakData = [PeakData; CurPeakData];
                     end
                 end
@@ -287,7 +297,7 @@ end
 
 % give the table variable names after everything is collected
 PeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
-    'ClickFreq','OrderofClick','PeakAmp','PeakLat'};
+    'ClickFreq','OrderofClick','PeakAmp','PeakLat','RMS'};
 
 % save it out
 cd (homedir),cd figs;

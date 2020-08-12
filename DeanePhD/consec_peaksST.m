@@ -1,4 +1,4 @@
-function [peakout,latencyout] = consec_peaksST(spectin, num_stim, dur_stim, start_time, BL)
+function [peakout,latencyout,rmsout] = consec_peaksST(spectin, num_stim, dur_stim, start_time, BL)
 
 if ~exist('start_time','var')
     start_time = 1; % 1 ms to avoid that the sink starts directly at 0 ms
@@ -16,22 +16,22 @@ end
 % spectin should be one avrec trace on which to detect peaks (e.g. 1:1400)
 
 %preallocation of onset detection window containers
+%preallocation of onset detection window containers
 peakout    = nan(1,num_stim);
 latencyout = nan(1,num_stim);
+rmsout     = nan(1,num_stim);
 det_on     = nan(1,num_stim);
 det_off    = nan(1,num_stim);
 det_jump   = dur_stim/num_stim;
-if det_jump > 100
-    det_jump = 100; % limiting the detection window to 100 if it's longer
-end
+
 % fill detection window containers
 for idet = 1:num_stim
     if idet == 1
-        det_on(idet) = start_time+BL;
+        det_on(idet) = start_time + BL;
     else
         det_on(idet) = det_on(idet-1) + det_jump;
     end
-    det_off(idet) = det_on(idet) + det_jump-2;
+    det_off(idet) = det_on(idet) + 99;
 end
 
 
@@ -55,4 +55,5 @@ for iSti = 1:num_stim
         peakout(iSti)    = pks(maxInd);
         latencyout(iSti) = locs(maxInd);
     end     
+    rmsout(iSti)         = rms(det_win(det_win > 0));
 end

@@ -1,4 +1,4 @@
-function [peakout,latencyout] = consec_peaks(spectin, num_stim, dur_stim, start_time, BL)
+function [peakout,latencyout,rmsout] = consec_peaks(spectin, num_stim, dur_stim, start_time, BL)
 
 if ~exist('start_time','var')
     start_time = 1; % 1 ms to avoid that the sink starts directly at 0 ms
@@ -18,21 +18,19 @@ end
 %preallocation of onset detection window containers
 peakout    = nan(1,num_stim);
 latencyout = nan(1,num_stim);
+rmsout     = nan(1,num_stim);
 det_on     = nan(1,num_stim);
 det_off    = nan(1,num_stim);
 det_jump   = dur_stim/num_stim;
-if det_jump > 100
-    det_jump = 100; % limiting the detection window to 100 if it's longer
-end
 
 % fill detection window containers
 for idet = 1:num_stim
     if idet == 1
-        det_on(idet) = start_time+BL;
+        det_on(idet) = start_time + BL;
     else
         det_on(idet) = det_on(idet-1) + det_jump;
     end
-    det_off(idet) = det_on(idet) + det_jump-2;
+    det_off(idet) = det_on(idet) + 99;
 end
 
 
@@ -46,7 +44,9 @@ for iSti = 1:num_stim
     det_win = spectin(:,det_on(iSti):det_off(iSti));
     
     % find peak power and peak latency
-    peakout(iSti) =  nanmax(nanmax(det_win));
+    peakout(iSti)        = nanmax(nanmax(det_win));
     [~,latencyout(iSti)] = find(det_win == peakout(iSti));
+
+    rmsout(iSti)         = rms(det_win(det_win > 0)); % only take source
      
 end

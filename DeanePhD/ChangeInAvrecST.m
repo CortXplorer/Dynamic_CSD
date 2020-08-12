@@ -24,7 +24,7 @@ CLstimlist = [2,5];
 
 % set up simple cell sheets to hold all data: avrec of total/layers and
 % peaks of pre conditions
-PeakData = array2table(zeros(0,9));
+PeakData = array2table(zeros(0,10));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -72,12 +72,12 @@ for i_In = 1:entries
                 % plot(squeeze(avgchan))
                 
                 for itrial = 1:size(avgchan,3)
-                    [peakout,latencyout] = consec_peaksST(avgchan(:,:,itrial), ...
+                    [peakout,latencyout,rmsout] = consec_peaksST(avgchan(:,:,itrial), ...
                         CLstimlist(iStim), 1000, 1, 200);
                     for itab = 1:CLstimlist(iStim)
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
-                            {itab}, {itrial}, peakout(itab), latencyout(itab));
+                            {itab}, {itrial}, peakout(itab), latencyout(itab), rmsout(itab));
                         PeakData = [PeakData; CurPeakData];
                     end % table entry
                 end % trial      
@@ -88,7 +88,7 @@ end % entry
 
 % give the table variable names after everything is collected
 PeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
-    'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat'};
+    'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat','RMS'};
 
 % save the table in the main folder - needs to be moved to the Julia folder
 % for stats
