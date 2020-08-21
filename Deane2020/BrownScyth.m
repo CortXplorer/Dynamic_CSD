@@ -10,8 +10,8 @@ dbstop if error
 
 % Change directory to your working folder
 if ~exist('homedir','var')
-    if exist('D:\MyCode\Dynamic_CSD','dir') == 7
-        cd('D:\MyCode\Dynamic_CSD');
+    if exist('D:\Dynamic_CSD','dir') == 7
+        cd('D:\Dynamic_CSD');
     elseif exist('C:\Users\kedea\Documents\Work Stuff\Dynamic_CSD','dir') == 7
         cd('C:\Users\kedea\Documents\Work Stuff\Dynamic_CSD')
     end
