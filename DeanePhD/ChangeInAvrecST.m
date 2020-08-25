@@ -75,6 +75,9 @@ for i_In = 1:entries
                     [peakout,latencyout,rmsout] = consec_peaksST(avgchan(:,:,itrial), ...
                         CLstimlist(iStim), 1000, 1, 200);
                     for itab = 1:CLstimlist(iStim)
+                        if isnan(peakout(itab))
+                            continue
+                        end
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
                             {itab}, {itrial}, peakout(itab), latencyout(itab), rmsout(itab));
