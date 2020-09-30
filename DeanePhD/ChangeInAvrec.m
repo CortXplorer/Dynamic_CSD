@@ -46,7 +46,8 @@ AvrecAll = cell(length(CLstimlist),length(layers),entries);
 PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
-PeakData = array2table(zeros(0,9));
+CLPeakData = array2table(zeros(0,9));
+AMPeakData = array2table(zeros(0,9));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -101,6 +102,7 @@ for i_In = 1:entries
                 else
                     avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:));
                 end
+                avgchan = avgchan(1:1377); %standard size here, some stretch to 1390 (KIC14)
                 % pull out condition
                 CondN{1,iMeas} = Data(iMeas).Condition;
                 % plot it
@@ -134,7 +136,7 @@ for i_In = 1:entries
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
                             {itab}, peakout(itab), latencyout(itab),rmsout(itab));
-                        PeakData = [PeakData; CurPeakData];
+                        CLPeakData = [CLPeakData; CurPeakData];
                     end
                 end
                 
@@ -161,57 +163,86 @@ for i_In = 1:entries
     end
     
     
-        %% Amplitude Modulation ---- copy over consec peak stuff when you start using this
+    %% Amplitude Modulation
+    
+    % 5 figures per animal
+    for iLay = 1:length(layers)
         
-    %     for iAn = 1:length(names)
-    %         % 1 figure per animal
-    %         AvrecCurves = figure('Name',['Avrec_AMs_' names{iAn}],'Position',[-1000 100 800 1200]);
-    %
-    %         stimlist = [2,5,10,20,40];
-    %
-    %         for iStim = 1:length(stimlist)
-    %             % create container for lables
-    %             CondN = cell(1,size(Data,2));
-    %
-    %             % 1 subplot per stimulus
-    %             subplot(length(stimlist),1,iStim);
-    %
-    %             for iMeas = 1:size(Data,2)
-    %                 if isempty(Data(iMeas).(names{iAn}))
-    %                     continue
-    %                 end
-    %
-    %                 if ~contains((Data(iMeas).(names{iAn}).Condition),'AM_')
-    %                     continue
-    %                 end
-    %
-    %                 % take an average of all channels (already averaged across trials)
-    %                 avgchan = Data(iMeas).(names{iAn}).AVREC_raw{1, iStim}';
-    %                 % smooth the data by gaussian window:
-    % %                 g_avgall = smoothdata(avgAll,'gaussian',5);
-    %                 % pull out condition
-    %                 CondN{1,iMeas} = Data(iMeas).(names{iAn}).Condition;
-    %                 % plot it
-    %                 plot(avgchan, 'LineWidth', 1)
-    %                 hold on
-    %             end
-    %
-    %             CondN = CondN(~cellfun('isempty',CondN));
-    %             legend(CondN)
-    %             title([num2str(stimlist(iStim)) ' Hz'])
-    %             hold off
-    %
-    %
-    %         end
-    %         h = gcf;
-    %         savefig(h,['Avrec_AMs_' names{iAn}],'compact')
-    %         try
-    %             saveas(h,['Avrec_AMs_' names{iAn} '.pdf'])
-    %         catch
-    %             fprint('No pdf saved for this file')
-    %         end
-    %         close (h)
-    %     end
+        h = figure('Name',['Avrec_Ams_' layers{iLay} '_' name],'Position',[10 10 1080 1200]);
+        
+        for iStim = 1:length(CLstimlist)
+            % create container for lables
+            CondN = cell(1,size(Data,2));
+            
+            % 1 subplot per stimulus
+            subplot(length(CLstimlist),1,iStim);
+            allmeas = [];
+            
+            for iMeas = 1:size(Data,2)
+                if isempty(Data(iMeas).measurement)
+                    continue
+                end
+                
+                if ~contains((Data(iMeas).Condition),'AM_')
+                    continue
+                end
+                
+                % take an average of all channels (already averaged across trials)
+                if contains(layers{iLay}, 'All')
+                    avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}); 
+                else
+                    avgchan = mean(Data(iMeas).LayerRecCSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:));
+                end
+                avgchan = avgchan(1:1377); %standard size here, some stretch to 1390 (KIC14)
+                % pull out condition
+                CondN{1,iMeas} = Data(iMeas).Condition;
+                % plot it
+                plot(avgchan, 'LineWidth', 1)
+                hold on
+                % store this avg temporarily with buddies
+                allmeas = vertcat(allmeas,avgchan);
+                
+                % store peak if preAM condition - only for normalization in
+                % next step!
+                if contains(CondN{1,iMeas},'preAM')
+                    PeakofPre(iStim,iLay,i_In) = max(avgchan);
+                end
+                
+                % if stim is 2 or 5 hz, pull out consecutive peak data
+                if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
+                    [peakout,latencyout,rmsout] = consec_peaks(avgchan, ...
+                        CLstimlist(iStim), 1000, 1);
+
+                    for itab = 1:CLstimlist(iStim)
+                        CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
+                            {Data(iMeas).Condition},CLstimlist(iStim), ...
+                            {itab}, peakout(itab), latencyout(itab),rmsout(itab));
+                        AMPeakData = [AMPeakData; CurPeakData];
+                    end
+                end
+                
+            end
+            
+            % and store the lot
+            AvrecAll{iStim,iLay,i_In} = allmeas;
+            
+            CondN = CondN(~cellfun('isempty',CondN));
+            legend(CondN)
+            title([num2str(CLstimlist(iStim)) ' Hz'])
+            hold off
+        end
+        
+        savefig(h,['Avrec_Clicks_' layers{iLay} '_' name],'compact')
+        
+        try
+            saveas(h,['Avrec_Clicks_'  layers{iLay} '_' name '.pdf'])
+        catch
+            fprint('No pdf saved for this file')
+        end
+        
+        close (h)
+    end
+    
     
     %% Spontaneous
     
@@ -297,7 +328,9 @@ for i_In = 1:entries
 end
 
 % give the table variable names after everything is collected
-PeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
+CLPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
+    'ClickFreq','OrderofClick','PeakAmp','PeakLat','RMS'};
+AMPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
     'ClickFreq','OrderofClick','PeakAmp','PeakLat','RMS'};
 
 % save it out
@@ -308,4 +341,5 @@ save('Spont_AvrecAll','SP_AvrecAll','SP_PeakofPre');
 % save the table in the main folder - needs to be moved to the Julia folder
 % for stats
 cd(homedir)
-writetable(PeakData,'AVRECPeakData.csv')
+writetable(CLPeakData,'AVRECPeakCL.csv')
+writetable(AMPeakData,'AVRECPeakAM.csv')
