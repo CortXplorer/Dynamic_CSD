@@ -119,16 +119,17 @@ for i_In = 1:entries
                 if (iStim == 1 || iStim == 2) && nansum(avgchan) ~= 0
                     [peakout,latencyout,rmsout] = consec_peaks(avgchan, ...
                         CLstimlist(iStim), 1000, 1);
-                    if iStim == 1
-                        plot(latencyout(1)+200,peakout(1),'o')
-                        plot(latencyout(2)+700,peakout(2),'o')
-                    elseif iStim == 2
-                        plot(latencyout(1)+200,peakout(1),'o')
-                        plot(latencyout(2)+400,peakout(2),'o')
-                        plot(latencyout(3)+600,peakout(3),'o')
-                        plot(latencyout(4)+800,peakout(4),'o')
-                        plot(latencyout(5)+1000,peakout(5),'o')
-                    end
+% %                     sanity check for peak detection
+%                     if iStim == 1
+%                         plot(latencyout(1)+200,peakout(1),'o')
+%                         plot(latencyout(2)+700,peakout(2),'o')
+%                     elseif iStim == 2
+%                         plot(latencyout(1)+200,peakout(1),'o')
+%                         plot(latencyout(2)+400,peakout(2),'o')
+%                         plot(latencyout(3)+600,peakout(3),'o')
+%                         plot(latencyout(4)+800,peakout(4),'o')
+%                         plot(latencyout(5)+1000,peakout(5),'o')
+%                     end
                     for itab = 1:CLstimlist(iStim)
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...

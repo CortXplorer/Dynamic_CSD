@@ -20,7 +20,7 @@ cd (homedir),cd DATA;
 input = dir('*.mat');
 entries = length(input);
 layers = {'All', 'I_II', 'IV', 'V', 'VI'};
-CLstimlist = [2,5];
+CLstimlist = [2,5,10];
 
 % set up simple cell sheets to hold all data: avrec of total/layers and
 % peaks of pre conditions
