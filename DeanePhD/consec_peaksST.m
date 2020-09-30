@@ -48,15 +48,20 @@ for iSti = 1:num_stim
     [str, maxInd]=max(p); %which peak is most prominent
     
 %     plot(det_win); hold on; plot(locs(maxInd),pks(maxInd),'o');hold off
-%     str < 0.0003
     
-    % find peak power and peak latency only if the peak is prominant enough
-    if str < 0.0003 %arbitrary threshold for me to try it out
-        peakout(iSti)   = NaN;
+    % Peak Prominence check
+    if str < 0.0003 %arbitrary threshold throwing out non-prominent peaks
+        peakout(iSti)    = NaN;
         latencyout(iSti) = NaN;
-    else
+        rmsout(iSti)     = rms(det_win(det_win > 0));
+    elseif isempty(str) % this would mean the data is a straight line
+        peakout(iSti)    = NaN;
+        latencyout(iSti) = NaN;
+        rmsout(iSti)     = NaN;
+    else % peak is there and strong enough
         peakout(iSti)    = pks(maxInd);
         latencyout(iSti) = locs(maxInd);
+        rmsout(iSti)     = rms(det_win(det_win > 0));
     end     
     rmsout(iSti)         = rms(det_win(det_win > 0));
 end
