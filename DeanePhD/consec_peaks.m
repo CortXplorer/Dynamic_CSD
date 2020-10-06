@@ -44,9 +44,16 @@ for iSti = 1:num_stim
     det_win = spectin(:,det_on(iSti):det_off(iSti));
     
     % find peak power and peak latency
-    peakout(iSti)        = nanmax(nanmax(det_win));
-    [~,latencyout(iSti)] = find(det_win == peakout(iSti));
+    if sum(det_win) == 0 % no sink detected at all
+        peakout(iSti)        = NaN;
+        latencyout(iSti)     = NaN;
+        rmsout(iSti)         = NaN;
+    else
+        peakout(iSti)        = nanmax(nanmax(det_win));
+        [~,latencyout(iSti)] = find(det_win == peakout(iSti));
+        rmsout(iSti)         = rms(det_win(det_win > 0)); % only take sink
+    end
 
-    rmsout(iSti)         = rms(det_win(det_win > 0)); % only take source
+    
      
 end
