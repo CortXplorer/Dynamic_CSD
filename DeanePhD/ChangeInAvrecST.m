@@ -64,14 +64,20 @@ for i_In = 1:entries
                 
                 % take an average of all channels at each trial
                 if contains(layers{iLay}, 'All')
-                    avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}); 
+                    avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}(:,:,:)); 
                 else
-                    avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:));
+                    % Layers take the nan-sourced CSD! (flip it also)
+                    avgchan = Data(iMeas).SglTrl_CSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:,:) *-1;
+                    avgchan(avgchan < 0) = NaN;
+                    avgchan = nanmean(avgchan);
+                    % to get a consecutive line after calculating the peaks
+                    % with NaN sources, we replace NaNs with zeros
+                    avgchan(isnan(avgchan)) = 0;
                 end
                 if isnan(avgchan(1)) %some supragranular layers not there
                     continue
                 end
-                avgchan = avgchan(1:1377); %standard size here, some stretch to 1390 (KIC14)
+                avgchan = avgchan(:,1:1377,:); %standard size here, some stretch to 1390 (KIC14)
                 % plot it if wanted
                 % plot(squeeze(avgchan))
                 
@@ -117,12 +123,18 @@ for i_In = 1:entries
                 if contains(layers{iLay}, 'All')
                     avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}); 
                 else
-                    avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:));
+                    % Layers take the nan-sourced CSD! (flip it also)
+                    avgchan = Data(iMeas).SglTrl_CSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:,:) *-1;
+                    avgchan(avgchan < 0) = NaN;
+                    avgchan = nanmean(avgchan);
+                    % to get a consecutive line after calculating the peaks
+                    % with NaN sources, we replace NaNs with zeros
+                    avgchan(isnan(avgchan)) = 0;
                 end
                 if isnan(avgchan(1)) %some supragranular layers not there
                     continue
                 end
-                avgchan = avgchan(1:1377); %standard size here, some stretch to 1390 (KIC14)
+                avgchan = avgchan(:,1:1377,:); %standard size here, some stretch to 1390 (KIC14)
                 % plot it if wanted
                 % plot(squeeze(avgchan))
                 
