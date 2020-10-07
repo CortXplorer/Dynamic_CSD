@@ -145,7 +145,11 @@ for i_In = 1:entries
                             CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                                 {Data(iMeas).Condition},CLstimlist(iStim), ...
                                 {itab}, peakout(itab), latencyout(itab),rmsout(itab));
-                            CLPeakData = [CLPeakData; CurPeakData];
+                            if contains(stimtype{iTyp},'CL_')
+                                CLPeakData = [CLPeakData; CurPeakData];
+                            elseif contains(stimtype{iTyp},'AM_')
+                                AMPeakData = [AMPeakData; CurPeakData];
+                            end
                         end
                     end
                     
