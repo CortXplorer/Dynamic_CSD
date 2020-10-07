@@ -25,9 +25,9 @@ CLstimlist = [2,5,10];
 % set up simple cell sheets to hold all data: avrec of total/layers and
 % peaks of pre conditions
 CLPeakData = array2table(zeros(0,10));
-CLPeakDataFull = array2table(zeros(0,10));
+CLPeakData = array2table(zeros(0,10));
 AMPeakData = array2table(zeros(0,10));
-AMPeakDataFull = array2table(zeros(0,10));
+AMPeakData = array2table(zeros(0,10));
 
 % loop through number of Data mats in folder
 for i_In = 1:entries
@@ -93,13 +93,8 @@ for i_In = 1:entries
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
                             {itab}, {itrial}, peakout(itab), latencyout(itab), rmsout(itab));
-                        CLPeakDataFull = [CLPeakDataFull; CurPeakData];
-                        
-                        % only take data for this set if the peak is detected
-                        if isnan(peakout(itab))
-                            continue
-                        end
                         CLPeakData = [CLPeakData; CurPeakData];
+
                     end % table entry
                 end % trial      
             end % measurement
@@ -150,13 +145,8 @@ for i_In = 1:entries
                         CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
                             {Data(iMeas).Condition},CLstimlist(iStim), ...
                             {itab}, {itrial}, peakout(itab), latencyout(itab), rmsout(itab));
-                        AMPeakDataFull = [AMPeakDataFull; CurPeakData];
-                        
-                        % only take data for this set if the peak is detected
-                        if isnan(peakout(itab))
-                            continue
-                        end
                         AMPeakData = [AMPeakData; CurPeakData];
+                        
                     end % table entry
                 end % trial      
             end % measurement
@@ -165,13 +155,9 @@ for i_In = 1:entries
 end % entry
 
 % give the table variable names after everything is collected
-CLPeakDataFull.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
-    'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat','RMS'};
 CLPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
     'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat','RMS'};
 
-AMPeakDataFull.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
-    'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat','RMS'};
 AMPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',...
     'ClickFreq','OrderofClick','TrialNumber','PeakAmp','PeakLat','RMS'};
 
@@ -179,6 +165,4 @@ AMPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',..
 % for stats
 cd(homedir)
 writetable(CLPeakData,'AVRECPeakCLST.csv')
-writetable(CLPeakDataFull,'AVRECPeakCLSTFull.csv')
 writetable(AMPeakData,'AVRECPeakAMST.csv')
-writetable(AMPeakDataFull,'AVRECPeakAMSTFull.csv')
