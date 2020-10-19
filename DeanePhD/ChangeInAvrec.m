@@ -43,7 +43,8 @@ stimtype = {'CL_','AM_'};
 
 % set up simple cell sheets to hold all data: avrec of total/layers and
 % peaks of pre conditions
-AvrecAll = cell(length(CLstimlist),length(layers),entries);
+CL_AvrecAll = cell(length(CLstimlist),length(layers),entries);
+AM_AvrecAll = cell(length(CLstimlist),length(layers),entries);
 PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
@@ -122,8 +123,10 @@ for i_In = 1:entries
                     
                     % store peak if preCL condition - only for normalization in
                     % next step!
-                    if contains(CondN{1,iMeas},'preCL') || contains(CondN{1,iMeas},'preAM')
-                        PeakofPre(iStim,iLay,i_In) = max(avgchan);
+                    if contains(CondN{1,iMeas},'preCL')
+                        CL_PeakofPre(iStim,iLay,i_In) = max(avgchan);
+                    elseif contains(CondN{1,iMeas},'preAM')
+                        AM_PeakofPre(iStim,iLay,i_In) = max(avgchan);
                     end
                     
                     % if stim is 2, 5, or 10 hz, pull out consecutive peak data
@@ -156,7 +159,11 @@ for i_In = 1:entries
                 end
                 
                 % and store the lot
-                AvrecAll{iStim,iLay,i_In} = allmeas;
+                if contains(stimtype{iTyp},'CL_')
+                    CL_AvrecAll{iStim,iLay,i_In} = allmeas;
+                elseif contains(stimtype{iTyp},'AM_')
+                    AM_AvrecAll{iStim,iLay,i_In} = allmeas;
+                end
                 
                 CondN = CondN(~cellfun('isempty',CondN));
                 legend(CondN)
@@ -268,7 +275,8 @@ AMPeakData.Properties.VariableNames = {'Group','Animal','Layer','Measurement',..
 % save it out
 cd (homedir),cd figs;
 mkdir Group_Avrec; cd Group_Avrec;
-save('AvrecAll','AvrecAll','PeakofPre');
+save('CL_AvrecAll','CL_AvrecAll','CL_PeakofPre');
+save('AM_AvrecAll','AM_AvrecAll','AM_PeakofPre');
 save('Spont_AvrecAll','SP_AvrecAll','SP_PeakofPre');
 % save the table in the main folder - needs to be moved to the Julia folder
 % for stats
