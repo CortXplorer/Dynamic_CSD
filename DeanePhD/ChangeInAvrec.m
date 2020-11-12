@@ -45,7 +45,8 @@ stimtype = {'CL_','AM_'};
 % peaks of pre conditions
 CL_AvrecAll = cell(length(CLstimlist),length(layers),entries);
 AM_AvrecAll = cell(length(CLstimlist),length(layers),entries);
-PeakofPre = zeros(length(CLstimlist),length(layers),entries);
+CL_PeakofPre = zeros(length(CLstimlist),length(layers),entries);
+AM_PeakofPre = zeros(length(CLstimlist),length(layers),entries);
 SP_AvrecAll = cell(length(layers),entries);
 SP_PeakofPre = zeros(length(layers),entries);
 CLPeakData = array2table(zeros(0,9));
@@ -129,10 +130,9 @@ for i_In = 1:entries
                         AM_PeakofPre(iStim,iLay,i_In) = max(avgchan);
                     end
                     
-                    % if stim is 2, 5, or 10 hz, pull out consecutive peak data
-                    if iStim <= 3 && nansum(avgchan) ~= 0
-                        [peakout,latencyout,rmsout] = consec_peaks(avgchan, ...
-                            CLstimlist(iStim), 1000, 1);
+                    % pull out consecutive peak data
+                    [peakout,latencyout,rmsout] = consec_peaks(avgchan, ...
+                        CLstimlist(iStim), 1000, 1);
 % %                     sanity check for peak detection
 %                     if iStim == 1
 %                         plot(latencyout(1)+200,peakout(1),'o')
@@ -144,18 +144,17 @@ for i_In = 1:entries
 %                         plot(latencyout(4)+800,peakout(4),'o')
 %                         plot(latencyout(5)+1000,peakout(5),'o')
 %                     end
-                        for itab = 1:CLstimlist(iStim)
-                            CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
-                                {Data(iMeas).Condition},CLstimlist(iStim), ...
-                                {itab}, peakout(itab), latencyout(itab),rmsout(itab));
-                            if contains(stimtype{iTyp},'CL_')
-                                CLPeakData = [CLPeakData; CurPeakData];
-                            elseif contains(stimtype{iTyp},'AM_')
-                                AMPeakData = [AMPeakData; CurPeakData];
-                            end
+                    for itab = 1:CLstimlist(iStim)
+                        CurPeakData = table({name(1:3)}, {name}, {layers{iLay}}, ...
+                            {Data(iMeas).Condition},CLstimlist(iStim), ...
+                            {itab}, peakout(itab), latencyout(itab),rmsout(itab));
+                        if contains(stimtype{iTyp},'CL_')
+                            CLPeakData = [CLPeakData; CurPeakData];
+                        elseif contains(stimtype{iTyp},'AM_')
+                            AMPeakData = [AMPeakData; CurPeakData];
                         end
                     end
-                    
+
                 end
                 
                 % and store the lot

@@ -11,6 +11,7 @@ if ~exist('num_stim','var')
 end
 if ~exist('dur_stim','var')
     dur_stim   = 1000;
+    spy
 end
 
 % spectin should be one avrec trace on which to detect peaks (e.g. 1:1400)
@@ -30,7 +31,15 @@ for idet = 1:num_stim
     else
         det_on(idet) = det_on(idet-1) + det_jump;
     end
-    det_off(idet) = det_on(idet) + 99;
+    
+    % detection window should end 1 ms before next window starts up to 99ms
+    if num_stim == 20
+        det_off(idet) = det_on(idet) + 49;
+    elseif num_stim == 40
+        det_off(idet) = det_on(idet) + 24;
+    else
+        det_off(idet) = det_on(idet) + 99;
+    end
 end
 
 

@@ -31,7 +31,13 @@ for idet = 1:num_stim
     else
         det_on(idet) = det_on(idet-1) + det_jump;
     end
-    det_off(idet) = det_on(idet) + 99;
+    if num_stim == 20
+        det_off(idet) = det_on(idet) + 49;
+    elseif num_stim == 40
+        det_off(idet) = det_on(idet) + 24;
+    else
+        det_off(idet) = det_on(idet) + 99;
+    end
 end
 
 
