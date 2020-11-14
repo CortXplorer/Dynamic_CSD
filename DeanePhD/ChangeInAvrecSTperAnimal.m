@@ -1,4 +1,4 @@
-%% Change in Avrec ST per Animal
+function ChangeInAvrecSTperAnimal(homedir,Aname)
 
 % This script takes *.mat files out of the DATA/ folder - manually called. It checks the
 % condition names and finds the measurements associated with repeated
@@ -11,16 +11,8 @@
 %           trial level
 
 %% standard operations
-clear; clc;
-cd('D:\Dynamic_CSD');
-homedir = pwd; 
-addpath(genpath(homedir));
-
 cd(homedir),cd DATA;
 
-%% TO CHANGE PER ANIMAL
-
-Aname = 'KIC10';
 
 %% Loop variables and data structures
 layers = {'All', 'I_II', 'IV', 'V', 'VI'}; 
@@ -174,3 +166,4 @@ AM_CSVname = [Aname 'PeakCLAM.csv'];
 cd(homedir)
 writetable(CLPeakData,CL_CSVname)
 writetable(AMPeakData,AM_CSVname)
+end
