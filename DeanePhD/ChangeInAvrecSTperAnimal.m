@@ -24,7 +24,7 @@ allocate = 0;
 for ifreq = 1:length(CLstimlist)
     allocate = allocate + CLstimlist(ifreq)*length(layers);
 end
-allocate = allocate*50; % extra trials will be removed later
+allocate = allocate*50*5; % 50 trials max (extra will be removed) & 5 Measurements
 
 CLPeakData = table('Size', [allocate 10], ...
     'VariableTypes', {'string', 'string','string','string','double',...
@@ -83,7 +83,6 @@ for iLay = 1:length(layers)
                 [peakout,latencyout,rmsout] = consec_peaksST(avgchan(:,:,itrial), ...
                     CLstimlist(iStim), 1000, 1, 200);
                 for itab = 1:CLstimlist(iStim)
-                    
                     CLPeakData.Group(clcount,1)       = {Aname(1:3)};
                     CLPeakData.Animal(clcount,1)      = {Aname};
                     CLPeakData.Layer(clcount,1)       = {layers{iLay}};
