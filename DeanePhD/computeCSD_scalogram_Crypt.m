@@ -43,28 +43,28 @@ cd(homedir); cd DATA; mkdir('Spectral'); cd('Spectral');
 
 disp('Running average WTs for KIC group')
 tic
-[KIC_Tune,KIC_CL,KIC_AM,KIC_SP] = runCwtCsd_CryptAV('KIC',params,homedir);
+[~,KIC_CL,KIC_AM,KIC_SP] = runCwtCsd_CryptAV('KIC',params,homedir);
 toc
 disp('... for KIT group')
 tic
-[KIT_Tune,KIT_CL,KIT_AM,KIT_SP] = runCwtCsd_CryptAV('KIT',params,homedir);
+[~,KIT_CL,KIT_AM,KIT_SP] = runCwtCsd_CryptAV('KIT',params,homedir);
 toc
 disp('... for KIV group')
 tic
-[KIV_Tune,KIV_CL,KIV_AM,KIV_SP] = runCwtCsd_CryptAV('KIV',params,homedir);
+[~,KIV_CL,KIV_AM,KIV_SP] = runCwtCsd_CryptAV('KIV',params,homedir);
 toc
 % Reorganize data into Gramm-compatible structure
 
 % organize 3 tables all with each group
-WT_Tuning = [struct2table(KIC_Tune); struct2table(KIT_Tune); struct2table(KIV_Tune)];
+%WT_Tuning = [struct2table(KIC_Tune); struct2table(KIT_Tune); struct2table(KIV_Tune)];
 WT_CL = [struct2table(KIC_CL); struct2table(KIT_CL); struct2table(KIV_CL)];
 WT_AM = [struct2table(KIC_AM); struct2table(KIT_AM); struct2table(KIV_AM)];
 WT_SP = [struct2table(KIC_SP); struct2table(KIT_SP); struct2table(KIV_SP)];
 
-save('WT_Tuning.mat','WT_Tuning')
-save('WT_CL.mat','WT_CL')
-save('WT_AM.mat','WT_AM')
-save('WT_SP.mat','WT_SP')
+%save('WT_Tuning.mat','WT_Tuning')
+writetable(WT_CL,'WT_CL.csv')
+writetable(WT_AM,'WT_AM.csv')
+writetable(WT_SP,'WT_SP.csv')
 clear WT_Tuning WT_CL WT_AM WT_SP KIC_Tune KIC_CL KIC_AM KIC_SP KIT_Tune ...
     KIT_CL KIT_AM KIT_SP KIV_Tune KIV_CL KIV_AM KIV_SP
 
