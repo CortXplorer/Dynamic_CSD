@@ -214,11 +214,10 @@ for i_In = 1:entries
                 chan5 = Data(iMeas).LayerRecCSD{1, 5}(str2num(Layer.(layers{iLay}){thisA}),:);
                 avgchan = mean(vertcat(chan1,chan2,chan3,chan4,chan5));
             end
+            
             % pull out condition
             CondN{1,iMeas} = Data(iMeas).Condition;
-            % plot it
-            plot(avgchan, 'LineWidth', 1)
-            hold on
+            
             % store this avg temporarily with buddies
             if ~isempty(allmeas) && length(allmeas)>length(avgchan)
                 diflength = length(allmeas) - length(avgchan);
@@ -227,8 +226,14 @@ for i_In = 1:entries
                 end
                 endchunk = avgchan(end-diflength+1:end);
                 avgchan = horzcat(avgchan, endchunk);
+            else
+                avgchan = avgchan(1:1377);
             end
             allmeas = vertcat(allmeas,avgchan);
+            
+            % plot it
+            plot(avgchan, 'LineWidth', 1)
+            hold on
             
             % store peak if preCL condition
             if contains(CondN{1,iMeas},'spPre')
