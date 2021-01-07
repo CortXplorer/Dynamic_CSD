@@ -41,7 +41,8 @@ for i1 = 1:entries
     Condition = {'Pre' 'preAM' 'preAMtono' 'preCL' 'preCLtono' 'spPre1' 'spPost1' ...
         'CL' 'CLtono' 'spPre2' 'spPost2' 'AM' 'AMtono' 'spEnd'}; 
 %     Condition = {'Pre' 'preCL' 'preCLtono' 'CL' 'CLtono'}; 
-    disp(['Condition List: ' Condition{:} ' lol'])
+%     Condition = {'preCL' 'CLtono'}; 
+    disp(['Condition List: ' Condition{:}])
     
     %% Condition and Indexer   
     Data = struct;

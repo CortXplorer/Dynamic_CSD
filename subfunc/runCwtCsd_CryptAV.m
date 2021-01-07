@@ -93,7 +93,7 @@ for iAn = 1:length(animals)  %#ok<*USENS>
                     % means that odd numbers (e.g. 7) will use exact middle (e.g. 4), while
                     % even (e.g. 6) returns middle/slightly lower (e.g. 3).
                     
-                    % Format here forces the use of eval to get channel locs
+                    % get channel location/center channel
                     curChan = str2num(Layer.(params.layers{iLay}){iAn}); %#ok<*ST2NM>
                     centerChan = curChan(ceil(length(curChan)/2));
                     theseChans = curChan-centerChan;
