@@ -104,17 +104,17 @@ for istim = 1:length(stimtype)
     %       KICgroup{stimulus(i.e. 2 Hz),layer(i.e. IV),animal(i.e.KIC02)}...
     %       (condition(i.e. pre-laser),time(ms))
     
-    for iGroup = 1:length(group)
-        
-        for iLay = 1:length(layers)
-            
-            % GA = group average
-            AvgAvrecCurves = figure('Name',['GA_Avrec_' stimtype{istim} '_' layers{iLay} '_' group{iGroup}],'Position',[-1000 100 800 1100]);
-            
+    for iLay = 1:length(layers)
+
+        figure('Name',['GA_Avrec_' stimtype{istim} '_' layers{iLay}], 'Position',[5 45 900 800]); %'Position',[-1000 100 800 1100]
+        suborder = [1,4,7,10,13];
+         
+        for iGroup = 1:length(group)
+                      
             for iStim = 1:length(stimlist)
-                subplot(length(stimlist),1,iStim);
+                subplot(length(stimlist),length(group),suborder(iStim));
                 if iStim == 1
-                    title(['Group Avrec ' stimtype{istim} ' ' layers{iLay} ' ' group{iGroup}])
+                    title([stimtype{istim} ' ' layers{iLay} ' ' group{iGroup}])
                 end
                 hold on
                 
@@ -147,21 +147,23 @@ for istim = 1:length(stimtype)
                 % post 3
                 plot(nanmean(cond5),'color',[0.9290 0.6940 0.1250],'LineWidth',1.5)
                 plot(nanstd(cond5)+nanmean(cond5),':','color',[0.9290 0.6940 0.1250])
+                axis([0 1400 0 1.5])
             end
+            suborder = suborder + 1;
             
-            legend('Pre Laser','std','15 min','std','60 min','std');
-            h = gcf;
-            savefig(h,['GA_Avrec_' stimtype{istim} '_' layers{iLay} '_' group{iGroup}],'compact')
-            % sometimes pdf makes a funky error
-            try
-                saveas(h,['GA_Avrec_' stimtype{istim} '_'  layers{iLay} '_' group{iGroup} '.pdf'])
-            catch
-                fprint('No pdf saved for this file')
-            end
-            
-            close (h)
+        end
+        %legend('Pre','std','Post1','std','Post4','std');
+        h = gcf;
+        savefig(h,['GA_Avrec_' stimtype{istim} '_' layers{iLay}],'compact')
+        % sometimes pdf makes a funky error
+        try
+            h.Renderer='Painters';
+            saveas(h,['GA_Avrec_' stimtype{istim} '_'  layers{iLay} '.pdf'])
+        catch
+            fprint('No pdf saved for this file')
         end
         
+        close (h)
     end
 end
 
