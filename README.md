@@ -3,7 +3,7 @@
 ### For information on how to use these scripts, please contact me at katrina.deane@lin-magdeburg.de 
 If you use this code, please cite our [latest paper](https://physoc.onlinelibrary.wiley.com/doi/10.1113/JP279705) associated with this project.
 
-Suggested [Git tutorial](https://www.chalkstreet.com/git-collaboration-tutorial/) and [Git documentation](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
+Suggested [Git documentation](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 
 
 Good Git practices:
