@@ -133,21 +133,13 @@ for istim = 1:length(stimtype)
                 cond5 = stackedgroup(5:5:end,:);
                 
                 % Pre
-                plot(nanmean(cond1),'color',[0 0.4470 0.7410],'LineWidth',3)
-                plot(nanstd(cond1)+nanmean(cond1),':','color',[0 0.4470 0.7410]) % errorbars at every ms...
+                shadedErrorBar(1:size(cond1,2),nanmean(cond1),nanstd(cond1),'lineProps', '-b')
                 % post 1
-                plot(nanmean(cond2),'color',[0.6350 0.0780 0.1840],'LineWidth',1.5)
-                plot(nanstd(cond2)+nanmean(cond2),':','color',[0.6350 0.0780 0.1840])
-                % post 2
-                % plot(nanmean(cond3),'color',[0.8500 0.3250 0.0980],'LineWidth',1.5)
-                % plot(nanstd(cond3)+nanmean(cond3),':','color',[0.8500 0.3250 0.0980])
-                % post 3
-                % plot(nanmean(cond4),'color',[0.4940 0.1840 0.5560],'LineWidth',1.5)
-                % plot(nanstd(cond4)+nanmean(cond4),':','color',[0.4940 0.1840 0.5560])
-                % post 3
-                plot(nanmean(cond5),'color',[0.9290 0.6940 0.1250],'LineWidth',1.5)
-                plot(nanstd(cond5)+nanmean(cond5),':','color',[0.9290 0.6940 0.1250])
-                axis([0 1400 0 1.5])
+                shadedErrorBar(1:size(cond2,2),nanmean(cond2),nanstd(cond2),'lineProps', '-r')
+                % post 4
+                shadedErrorBar(1:size(cond5,2),nanmean(cond5),nanstd(cond5),'lineProps', '-y')
+                xlim([0 1400])
+                ylim([0 1.5])
             end
             suborder = suborder + 1;
             
