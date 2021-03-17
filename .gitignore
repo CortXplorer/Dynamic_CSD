@@ -6,7 +6,7 @@ raw/
 Deane2020/CurranSpectral/Data/
 Deane2020/CurranSpectral/Pictures/
 
-
+*.wav
 *.asv
 *.csv
 *.pdf
