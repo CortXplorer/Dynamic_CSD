@@ -248,6 +248,7 @@ for i1 = 1:entries
                     Data(CondIDX).Sinkoffset    = OFFSET;
                     Data(CondIDX).SinkRMS       = RMS;
                     Data(CondIDX).SingleSinkRMS = SINGLE_RMS;
+                    Data(CondIDX).SglTrl_LFP    = SingleTrialFP;
                     Data(CondIDX).LFP           = AvgFP;
                     Data(CondIDX).SglTrl_CSD    = SingleTrialCSD;
                     Data(CondIDX).CSD           = AvgCSD;
