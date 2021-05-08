@@ -76,12 +76,12 @@ for iLay = 1:length(layers)
                 continue
             end
             avgchan = avgchan(:,1:1377,:); %standard size here, some stretch to 1390 (KIC14)
-            % plot it if wanted
-            % plot(squeeze(avgchan))
+            % plot it if wanted - remember these contain all trials
+%            plot(squeeze(avgchan))
             
             for itrial = 1:size(avgchan,3)
                 [peakout,latencyout,rmsout] = consec_peaksST(avgchan(:,:,itrial), ...
-                    CLstimlist(iStim), 1000, 1, 200);
+                    CLstimlist(iStim), 1000, 1, 200); 
                 for itab = 1:CLstimlist(iStim)
                     CLPeakData.Group(clcount,1)       = {Aname(1:3)};
                     CLPeakData.Animal(clcount,1)      = {Aname};

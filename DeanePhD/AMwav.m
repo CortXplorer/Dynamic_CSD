@@ -8,7 +8,7 @@ messagesignal = sin(2*pi*5*t);
 signofcarrier = sin(2*pi*frqHz*t);
 
 x=2*(ampcarrier+messagesignal).*signofcarrier;
-% plot(x)
+plot(x)
 sound(x,Fs);
 
 audiowrite('AmpMod.wav',x,Fs)
