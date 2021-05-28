@@ -31,17 +31,18 @@ for idet = 1:num_stim
     else
         det_on(idet) = det_on(idet-1) + det_jump;
     end
-    
-    % detection window should end 1 ms before next window starts up to 99ms
     if num_stim == 20
         det_off(idet) = det_on(idet) + 49;
     elseif num_stim == 40
         det_off(idet) = det_on(idet) + 24;
-    else
+    elseif num_stim == 10
         det_off(idet) = det_on(idet) + 99;
+    elseif num_stim == 5
+        det_off(idet) = det_on(idet) + 199;
+    elseif num_stim == 2
+        det_off(idet) = det_on(idet) + 299; %not full window 
     end
 end
-
 
 %% Take features
 
