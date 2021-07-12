@@ -206,9 +206,11 @@ for i1 = 1:entries
                     DUR2.InfE = DUR2.InfE(:,2)' - DUR2.InfE(:,1)'; 
                     DUR2.InfL = DUR2.InfL(:,2)' - DUR2.InfL(:,1)'; 
                                        
-                    %rename data for plots
-                    if ~isempty(dB_lev{iA})
-                        name = [animals{iA} '_' dB_lev{iA}];
+                    %rename data for plots - needed for shuttlebox animals
+                    if exist('dB_lev','var')
+                        if ~isempty(dB_lev{iA})
+                            name = [animals{iA} '_' dB_lev{iA}];
+                        end
                     end
                     
                     %% BANDWIDTH and TUNINGWIDTH
