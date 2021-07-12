@@ -62,9 +62,10 @@ for iLay = 1:length(layers)
             
             % take an average of all channels at each trial
             if contains(layers{iLay}, 'All')
+                % total gets the single trial avrec
                 avgchan = mean(Data(iMeas).SingleRecCSD{1, iStim}(:,:,:));
             else
-                % Layers take the nan-sourced CSD! (flip it also)
+                % Layers take the nan-sourced CSD (flip it also)
                 avgchan = Data(iMeas).SglTrl_CSD{1, iStim}(str2num(Layer.(layers{iLay}){thisA}),:,:) *-1;
                 avgchan(avgchan < 0) = NaN;
                 avgchan = nanmean(avgchan);
