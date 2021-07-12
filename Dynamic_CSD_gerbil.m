@@ -1,4 +1,4 @@
-function Dynamic_CSD_Inf_single(homedir)
+function Dynamic_CSD_gerbil(homedir)
 %% Dynamic CSD for sinks I_II through Inf; incl. single
 
 %   This script takes input from the groups and raw folders. It calculates 

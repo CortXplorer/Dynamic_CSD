@@ -40,7 +40,7 @@ addpath(genpath(homedir));
 %Input:     sink_dura_single.m and several other edited functions
 %Output:    Figures of all single animals in "Single..." folder 
 %           DATA.mat files in DATA folder
-Dynamic_CSD_Inf_single(homedir)
+Dynamic_CSD_gerbil(homedir)
 
 %% Group Sorting
 
@@ -49,7 +49,7 @@ Dynamic_CSD_Inf_single(homedir)
 %Output:    Figures of groups in "Group..." folder 
 %           .mat files in DATA/Output folder
 %           AVG data
-GroupAnalysis_fnc_singlecondition(1,0,0,homedir); 
+GroupAnalysis_gerbil(1,0,0,homedir); 
 
 %% Permutation analysis of CSD profiles
 
