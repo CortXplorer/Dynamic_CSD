@@ -1,4 +1,4 @@
-function X = GroupAnalysis_fnc_singlecondition(bin, zscore, mirror, homedir)
+function X = GroupAnalysis_gerbil(bin, zscore, mirror, homedir)
 % This function asks if it should bin (1 or 0), take zscore (1 or 0), or
 % mirror (1 or 0)
 
@@ -145,7 +145,7 @@ for i1 = 1:entries
     cd([homedir '\figs\' 'Group_' input(i1).name(1:end-9)]);
     savefig(h,[input(i1).name(1:end-4), ' Avg Latency Curves GS']); close all
     
-  %% plot Tuning Curves ST Avg
+  %% plot Tuning Curves self-tuning Avg
     h=figure('units','normalized','outerposition',[0 0 1 1], 'Name','Avg Tuning Curves ST');
     
     for it = 1:length(Tuning)
