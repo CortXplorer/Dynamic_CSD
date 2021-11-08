@@ -1,4 +1,4 @@
-function Dynamic_CSD_Crypt(homedir)
+function Dynamic_CSD_Crypt(homedir, Condition)
 %% Dynamic CSD for sinks I_II through VI; incl. single
 
 %   This script takes input from the groups and raw folders. It calculates 
@@ -38,10 +38,7 @@ for i1 = 1:entries
     run(input(i1).name);
     
     %% Choose Condition    
-    Condition = {'Pre' 'preAM' 'preAMtono' 'preCL' 'preCLtono' 'spPre1' 'spPost1' ...
-        'CL' 'CLtono' 'spPre2' 'spPost2' 'AM' 'AMtono' 'spEnd'}; 
 %     Condition = {'Pre' 'preCL' 'preCLtono' 'CL' 'CLtono'}; 
-%     Condition = {'preCL' 'CLtono'}; 
     disp(['Condition List: ' Condition{:}])
     
     %% Condition and Indexer   
