@@ -3,6 +3,8 @@ groups/
 DATA/
 figs/
 raw/
+
+% ignore data and file types
 Deane2020/CurranSpectral/Data/
 Deane2020/CurranSpectral/Pictures/
 
