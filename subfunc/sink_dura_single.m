@@ -1,5 +1,5 @@
 function [DUR,RMS,SINGLE_RMS,SINT,PAMP,SINGLE_SinkPeak,PLAT,SINGLE_PeakLat,INT] = ...
-    sink_dura_single(Layer,AvgCSD,SingleTrialCSD,BL, Baseline)
+    sink_dura_single(Layer,AvgCSD,SingleTrialCSD,BL)
 %This function produces the duration of sinks within pre-specified
 %layers.
 
@@ -38,14 +38,10 @@ for i1 = 1:length(AvgCSD) %length of stimuli
     
     %create std and mean line from previously generated mat or from current
     %CSDs' BL horizontally stacking
-    if ~isempty(Baseline)
-        std_BL = Baseline.threshstd;
-        mean_BL = Baseline.threshmean;
-    else
-        global_BL = cell2mat(cellfun(@(x) x(:,1:BL),AvgCSD, 'UniformOutput',0));
-        std_BL = nanstd(global_BL(:)); %the standard deviation of the summed baseline
-        mean_BL = nanmean(global_BL(:)); %the mean of the summed baseline
-    end
+    global_BL = cell2mat(cellfun(@(x) x(:,1:BL),AvgCSD, 'UniformOutput',0));
+    std_BL = nanstd(global_BL(:)); %the standard deviation of the summed baseline
+    mean_BL = nanmean(global_BL(:)); %the mean of the summed baseline
+
     
     for i2 = 1:length(Order) %Order defined just above
         
