@@ -10,20 +10,37 @@
 % main folder. 
 
 clear; clc;
-cd('\yourpath\Dynamic_CSD'); % 'D:\Dynamic_CSD'
+cd('E:\Dynamic_CSD'); % 'D:\Dynamic_CSD'
 homedir = pwd; 
 addpath(genpath(homedir));
-%% The Basics:
+%% TO WATCH THE TONOTOPIES
+
+whichday = 3;
+
+%% Data Structure Building:
 
 %Input:     sink_dura.m and several other functions, groups/*.m
 %           files to indicated layer sorting and file types, raw data
 %           corresponding to group scripts
 %Output:    Figures of all single animals in "Single..." folder 
 %           DATA.mat files in DATA folder
+
+% full list for days of tonotopy observation
+CondList = {'tono_day1','tono_day2','tono_day3','tono_day2','tono_day3'}; 
+% truncate based on which day to let the code know how much to run
+Condition = CondList(1:whichday);
+% run it
 disp('Running Dynamic_CSD')
-Dynamic_CSD_gerbil(homedir)
+Dynamic_CSD_gerbil(homedir,Condition)
 
 %% Ongoing Tonotopy
+
+%Input:     
+%Output:    Figures in ..\figs\Ongoing Tonotopies
+
+% write in which layers you need
+Layers = {'I_IIL','IVE','IVL','VaE','VbE','VIaE','VIbL'}; 
+OngoingTonotopy(homedir,Layers,whichday);
 
 
 
