@@ -23,39 +23,15 @@ addpath(genpath(homedir));
 disp('Running Dynamic_CSD')
 Dynamic_CSD_gerbil(homedir)
 
-
-%% CSD Average Picture
-
-% -- we can adapt this to your needs and use it also for the average tuning
-% curves. For now I'm just adding it to the pipeline as is. - kat
-
-%Input:     is DATA; specifically named per Kat's PhD groups
-%Output:    is in figure folder AvgCSDs; figures only for representation of
-%           characteristic profile - pre and first post laser click and 
-%           amplitude modulated csd 
-% AvgCSDfig(homedir)
+%% Ongoing Tonotopy
 
 
-%% Group Sorting
 
-%Input:     ...\Dynamic_CSD_Analysis\DATA -> *DATA.mat; (bin, zscore,
-%           mirror)
-%Output:    Figures of groups in "Group..." folder 
-%           .mat files in DATA/Output folder
-%           AVG data
 
-% Data out:     Data struct contains sorted tuning of all tonotopies per
-%               layer per parameter (for FIRST sink in layer if it
-%               falls between 0:65 ms, pause&click not included); 
 
-% Figures out:  Tuning curves: peak amp, SinkRMS, temporal sinkRMS for groups
-%               Latency curves: sink onset and sink peak timing tuned to
-%               peak of sinkRMS
 
-% Note:         Single trial parameters possible but commented and not
-%               currently able to run. 
-%               Will need to be adapted to run more than one condition.
-disp('Running Group Anyalysis')
-GroupAnalysis_gerbil(1,0,0,homedir);
+
+
+
 
 
