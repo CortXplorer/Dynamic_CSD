@@ -16,6 +16,10 @@ addpath(genpath(homedir));
 %% TO WATCH THE TONOTOPIES
 
 whichday = 3;
+% full list for days of tonotopy observation
+CondList = {'tono_day1','tono_day2','tono_day3','tono_day2','tono_day3'}; 
+% truncate based on which day to let the code know how much to run
+Condition = CondList(1:whichday);
 
 %% Data Structure Building:
 
@@ -25,11 +29,6 @@ whichday = 3;
 %Output:    Figures of all single animals in "Single..." folder 
 %           DATA.mat files in DATA folder
 
-% full list for days of tonotopy observation
-CondList = {'tono_day1','tono_day2','tono_day3','tono_day2','tono_day3'}; 
-% truncate based on which day to let the code know how much to run
-Condition = CondList(1:whichday);
-% run it
 disp('Running Dynamic_CSD')
 Dynamic_CSD_gerbil(homedir,Condition)
 
@@ -40,7 +39,7 @@ Dynamic_CSD_gerbil(homedir,Condition)
 
 % write in which layers you need
 Layers = {'I_IIL','IVE','IVL','VaE','VbE','VIaE','VIbL'}; 
-OngoingTonotopy(homedir,Layers,whichday);
+OngoingTonotopy(homedir,Layers,Condition);
 
 
 

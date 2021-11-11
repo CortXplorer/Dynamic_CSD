@@ -1,4 +1,4 @@
-function OngoingTonotopy(homedir,Layers,whichday)
+function OngoingTonotopy(homedir,Layers,Condition)
 
 % Documentation goes here: purpose of code, input and output
 % note - tonotopies built on SinkRMS, SinkPeakAmp can be used also if
@@ -17,8 +17,8 @@ end
 if ~exist('Layers','var')
     Layers = {'IV'};
 end
-if ~exist('whichday','var')
-    whichday = 1;
+if ~exist('Condition','var')
+    Condition = {'tono_day1'};
 end
 
 % Look for all data in data folder
@@ -40,8 +40,15 @@ for i1 = 1:entries
     % create a variable which adds the amount of animals to the indexer
     % after the first loop, for subplot grid
     plusrow = 0;
+    % create a variable to determine how many measurements are in each
+    % condition. If measurements in condition are not equal, this method
+    % should be changed!
+    num_meas = size(Data,2)/length(Condition);
+    % create a corresponding index variable to tic up through consecutive
+    % measurements in the following loops
+    cur_cond = 0;
     
-    for iDay = 1:whichday
+    for iDay = 1:length(Condition)
         % after the first loop, add to the indexer 
         if iDay > 1
             plusrow = plusrow + length(Animals);
@@ -49,16 +56,16 @@ for i1 = 1:entries
         
         for iAn = 1:length(Animals)
             % set up subplot structure
-            subplot(whichday,length(Animals),iAn+plusrow)
+            subplot(length(Condition),length(Animals),iAn+plusrow)
             % preallocate container for layers final averages
             layavg = zeros(length(Layers),(length(Data(1).(Animals{iAn}).Frqz)));
 
             for iLay = 1:length(Layers)
                 % preallocate container for averaging
-                measout = zeros(size(Data,2),(length(Data(1).(Animals{iAn}).Frqz)));  
+                measout = zeros(num_meas,(length(Data(1).(Animals{iAn}).Frqz)));  
 
-                for iMe = 1:size(Data,2)
-                    measout(iMe,:) = horzcat(Data(iMe).(Animals{iAn}).SinkRMS.(Layers{iLay}));
+                for iMe = 1:num_meas
+                    measout(iMe,:) = horzcat(Data(iMe+cur_cond).(Animals{iAn}).SinkRMS.(Layers{iLay}));
                 end % measurement loop
                 layavg(iLay,:) = nanmean(measout); % for testing: layavg = rand(3,8)
             end % layer loop
@@ -73,7 +80,10 @@ for i1 = 1:entries
             xticklabels (Data(iMe).(Animals{iAn}).Frqz) % label ticks as stimuli
             % you can rotate the labels slightly to look better later if wanted
             title (Animals{iAn})
+            
         end % animal loop
+        % add to the indexer after completing current measurements
+        cur_cond = cur_cond + num_meas;
     end % day loop
     
     cd(homedir); cd figs
@@ -87,7 +97,7 @@ for i1 = 1:entries
     set(h, 'PaperType', 'A4'); 
     set(h, 'PaperOrientation', 'landscape');
     set(h, 'PaperUnits', 'centimeters');
-    savefig(h,[Group ' Tonotopy Observation Day ' num2str(whichday)],'compact') % do we want to overwrite the previous days? Removed whichday from this
+    savefig(h,[Group ' Tonotopy Observation Day ' num2str(length(Condition))],'compact') % do we want to overwrite the previous days? Removed length(Condition) from this
     close(h)
     
     %% open granular sink best frequency figure
