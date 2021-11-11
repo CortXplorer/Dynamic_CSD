@@ -19,7 +19,7 @@ whichday = 3;
 
 %% Data Structure Building:
 
-%Input:     sink_dura.m and several other functions, groups/*.m
+%Input:     sink_dura.m and several other functions, ..\groups\*.m
 %           files to indicated layer sorting and file types, raw data
 %           corresponding to group scripts
 %Output:    Figures of all single animals in "Single..." folder 
