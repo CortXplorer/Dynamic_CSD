@@ -74,7 +74,7 @@ for i1 = 1:entries
             plot(layavg','LineWidth',2)
             % add features to the plot
             legend(Layers)
-            ylabel ('SinkRMS [mV/µm^2]') % double check the unit is correct
+            ylabel ('SinkRMS [mV/mm^2]') % double check the unit is correct
             xlabel ('Time [ms]')
             xticks (1:length(Data(iMe).(Animals{iAn}).Frqz)) % force all ticks to show
             xticklabels (Data(iMe).(Animals{iAn}).Frqz) % label ticks as stimuli
@@ -101,10 +101,39 @@ for i1 = 1:entries
     close(h)
     
     %% open granular sink best frequency figure
-    % figure('Name','Ongoing Best Frequency') 
+     
     % we should make a plot which shows the progress of the best frequency
     % per animal. One plot with animals as color points with lines 
     % connnecting each day, BF over time[day]. 
+    
+    % figure('Name','Ongoing Best Frequency')
+    
+    % preallocate container for all animal data
+    for iAn = 1:length(Animals)
+        cur_cond = 0;
+        % preallocate container for Day BFs
+        dayout = zeros(1,length(Condition));
+        for iDay = 1:length(Condition)
+            
+            % preallocating measurement BF
+            measout = zeros(1,num_meas);
+            for iMe = 1:num_meas
+                % get BF from each measurement
+                measout(iMe) = Data(iMe+cur_cond).CIC01.GS_BF;
+            end % measurement loop
+            
+            cur_cond = cur_cond+num_meas;
+            % average e.g. [ 2 2 4 ] = 2.6667 kHz
+            % & store BF in container
+            dayout(iDay) = mean(measout);
+        end % day loop
+        
+        % store day BF data in container for all animals
+        
+    end % animal loop
+    
+    % plot BFs as points over days, per animal. 
+
     
     % Note! granular sink BF may not be the best choice for tracking awake
     % animal best frequency responses. If you notice that you have no layer
