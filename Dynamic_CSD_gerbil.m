@@ -522,7 +522,7 @@ for i1 = 1:entries
                     set(h, 'PaperUnits', 'centimeters');
                     savefig(h,[name '_' measurement '_RMS Sink tuning' ],'compact')
                     close (h)
-%                     
+
 %                     figure('Name',[name ' ' measurement ': ' Condition{iC} ' ' num2str(i4)]);
 %                     plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.I_IIL],'LineWidth',2,'Color','black'),...
 %                         hold on,...
