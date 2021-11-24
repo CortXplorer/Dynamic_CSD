@@ -345,7 +345,7 @@ for i1 = 1:entries
 %                     savefig(h,[name '_' measurement '_Sink_onset+offset' ],'compact')
 %                     close (h)
 % 
-                    BF = find([PAMP.IVE] == max([PAMP.IVE]));
+                    BF = find([RMS(1:end-2).IVE] == max([RMS(1:end-2).IVE]));
 %                     BF_frqz = frqz(BF);
 %                     
 %                     if isnan(BF), BF = 1; end
