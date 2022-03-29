@@ -10,7 +10,7 @@
 % main folder. 
 
 clear; clc;
-cd('E:\Dynamic_CSD'); % 'D:\Dynamic_CSD'
+cd('D:\MyCode\Dynamic_CSD'); % 'D:\Dynamic_CSD'
 homedir = pwd; 
 addpath(genpath(homedir));
 %% TO WATCH THE TONOTOPIES
