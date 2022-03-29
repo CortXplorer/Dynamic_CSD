@@ -34,7 +34,7 @@ SINGLE_SinkPeak = struct;
 SINGLE_PeakLat = struct;
 SINGLE_RMS = struct;
 
-for i1 = 1:length(AvgCSD) %length of stimuli
+for icsd = 1:length(AvgCSD) %length of stimuli
     
     %create std and mean line from previously generated mat or from current
     %CSDs' BL horizontally stacking
@@ -47,23 +47,23 @@ for i1 = 1:length(AvgCSD) %length of stimuli
         
         %to take correct channels for layers pre-set in group .m's
         if strcmp(Order{i2}, 'all_chan')
-            Chan = (1:size(AvgCSD{i1},1)); % all layers/channels
+            Chan = (1:size(AvgCSD{icsd},1)); % all layers/channels
         else
             Chan = Layer.(Order{i2});
         end        
         
         %current stimulus avgcsd only in the current layer
-        rawCSD = (nanmean(AvgCSD{i1}(Chan,:)))*-1; %to calculate latency and amplitude from unaltered signal
-        rawCSD_single = (nanmean(SingleTrialCSD{i1}(Chan,:,:))) *-1;
+        rawCSD = (nanmean(AvgCSD{icsd}(Chan,:)))*-1; %to calculate latency and amplitude from unaltered signal
+        rawCSD_single = (nanmean(SingleTrialCSD{icsd}(Chan,:,:))) *-1;
         
         %zero all source info and shape the data for sink detection
-        holdAvgCSDzero = AvgCSD{i1}(Chan,:);
+        holdAvgCSDzero = AvgCSD{icsd}(Chan,:);
         zerosource = find(holdAvgCSDzero(:,:)>=0);
         holdAvgCSDzero(zerosource) = 0; %#ok<*FNDSB> %equates all positive values (denoting sources) to zero
         zeroCSD_layer = (nanmean(holdAvgCSDzero))*-1; %flips negative values to positive 
         
         %nan all source for INT calculation
-        holdAvgCSDnan = AvgCSD{i1}(Chan,:);
+        holdAvgCSDnan = AvgCSD{icsd}(Chan,:);
         holdAvgCSDnan(zerosource) = NaN;
         nanCSD = (nanmean(holdAvgCSDnan))*-1;
         
@@ -120,8 +120,8 @@ for i1 = 1:length(AvgCSD) %length of stimuli
             
         %% Late Input 
         else
-            if ~isnan(DUR(i1).(Order{i2-(floor(length(Order)/2))})(2)) %set starting point as end of early sink if exists or based on onset level chosen
-                early = DUR(i1).(Order{i2-(floor(length(Order)/2))})(2);
+            if ~isnan(DUR(icsd).(Order{i2-(floor(length(Order)/2))})(2)) %set starting point as end of early sink if exists or based on onset level chosen
+                early = DUR(icsd).(Order{i2-(floor(length(Order)/2))})(2);
             else 
                 early = onset_lev;
             end
@@ -158,11 +158,11 @@ for i1 = 1:length(AvgCSD) %length of stimuli
             peaklat = (find(nanCSD(:,Sink_time(1):Sink_time(2)) == nanmax(nanCSD(:,Sink_time(1):Sink_time(2)))))+Sink_time(1);
         end
         
-        PAMP(i1).(Order{i2}) = peakamp; % peak amplitude
-        PLAT(i1).(Order{i2}) = round(peaklat); % peak latency
-        DUR(i1).(Order{i2}) = round(Sink_time); % sink duration
-        RMS(i1).(Order{i2})= sinkrms; % sink rms
-        SINT(i1).(Order{i2})= sinkint; % sink integral (mean)
+        PAMP(icsd).(Order{i2}) = peakamp; % peak amplitude
+        PLAT(icsd).(Order{i2}) = round(peaklat); % peak latency
+        DUR(icsd).(Order{i2}) = round(Sink_time); % sink duration
+        RMS(icsd).(Order{i2})= sinkrms; % sink rms
+        SINT(icsd).(Order{i2})= sinkint; % sink integral (mean)
         
         state = round((Sink_time(1):Sink_time(end))-BL);
         if isnan(state)
@@ -171,36 +171,40 @@ for i1 = 1:length(AvgCSD) %length of stimuli
         
         RMSINT = sqrt((rawCSD*-1).^2)';
         
-        INT(i1).(Order{i2})= trapz(RMSINT(state+BL)); % integral of sink curve to get V*s/mm?
+        INT(icsd).(Order{i2})= trapz(RMSINT(state+BL)); % integral of sink curve to get V*s/mm?
         
         %% Single Trial Data Structures
         
         if isnan(sinkrms)
-            SINGLE_SinkPeak(i1).(Order{i2})= nan(50,1);
-            SINGLE_PeakLat(i1).(Order{i2})= nan(50,1);
-            SINGLE_RMS(i1).(Order{i2})= nan(50,1);
+            SINGLE_SinkPeak(icsd).(Order{i2})= nan(50,1);
+            SINGLE_PeakLat(icsd).(Order{i2})= nan(50,1);
+            SINGLE_RMS(icsd).(Order{i2})= nan(50,1);
             continue % skip and go to next loop
         end
          
         for i4 = 1:size(rawCSD_single,3)
             curRun = rawCSD_single(:,Sink_time(1):Sink_time(2),i4);
 
-            SINGLE_RMS(i1).(Order{i2})(i4) = rms(curRun);
-            SINGLE_SinkPeak(i1).(Order{i2})(i4)= max(curRun);
-            SINGLE_PeakLat(i1).(Order{i2})(i4)= find(curRun == max(curRun),1) + 200;
+            SINGLE_RMS(icsd).(Order{i2})(i4) = rms(curRun);
+            SINGLE_SinkPeak(icsd).(Order{i2})(i4)= max(curRun);
+            if isnan(SINGLE_RMS(icsd).(Order{i2})(i4))
+                SINGLE_PeakLat(icsd).(Order{i2})(i4)= NaN;
+            else
+                SINGLE_PeakLat(icsd).(Order{i2})(i4)= find(curRun == max(curRun),1) + 200;
+            end
         end
         
         % if only 49 trils (case with some chronic animals)
-        if length(SINGLE_SinkPeak(i1).(Order{i2})) == 49 
-            SINGLE_SinkPeak(i1).(Order{i2})(50)= NaN;
-            SINGLE_PeakLat(i1).(Order{i2})(50)= NaN;
-            SINGLE_RMS(i1).(Order{i2})(50)= NaN;
+        if length(SINGLE_SinkPeak(icsd).(Order{i2})) == 49 
+            SINGLE_SinkPeak(icsd).(Order{i2})(50)= NaN;
+            SINGLE_PeakLat(icsd).(Order{i2})(50)= NaN;
+            SINGLE_RMS(icsd).(Order{i2})(50)= NaN;
         end
         % if more than 50 trials (%case with other chronic animals)
-        if length(SINGLE_SinkPeak(i1).(Order{i2})) > 50 
-            SINGLE_SinkPeak(i1).(Order{i2}) = SINGLE_SinkPeak(i1).(Order{i2})(1:50);
-            SINGLE_PeakLat(i1).(Order{i2}) = SINGLE_PeakLat(i1).(Order{i2})(1:50);
-            SINGLE_RMS(i1).(Order{i2}) = SINGLE_RMS(i1).(Order{i2})(1:50);
+        if length(SINGLE_SinkPeak(icsd).(Order{i2})) > 50 
+            SINGLE_SinkPeak(icsd).(Order{i2}) = SINGLE_SinkPeak(icsd).(Order{i2})(1:50);
+            SINGLE_PeakLat(icsd).(Order{i2}) = SINGLE_PeakLat(icsd).(Order{i2})(1:50);
+            SINGLE_RMS(icsd).(Order{i2}) = SINGLE_RMS(icsd).(Order{i2})(1:50);
         end
     end
 end

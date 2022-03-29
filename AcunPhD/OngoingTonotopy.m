@@ -74,7 +74,7 @@ for i1 = 1:entries
             plot(layavg','LineWidth',2)
             % add features to the plot
             legend(Layers)
-            ylabel ('SinkRMS [mV/µm^2]') % double check the unit is correct
+            ylabel ('SinkRMS [mV/mm^2]') % double check the unit is correct
             xlabel ('Time [ms]')
             xticks (1:length(Data(iMe).(Animals{iAn}).Frqz)) % force all ticks to show
             xticklabels (Data(iMe).(Animals{iAn}).Frqz) % label ticks as stimuli
@@ -91,7 +91,11 @@ for i1 = 1:entries
     % that doesn't already have this folder. Matlab does not have an issue
     % skipping the command if the directory already exists so no
     % it-statement is needed to check for it first
-    mkdir('Ongoing Tonotopies'); cd('Ongoing Tonotopies')
+    if exist('Ongoing Tonotopies','dir') == 7
+        cd('Ongoing Tonotopies')
+    else
+        mkdir('Ongoing Tonotopies'); cd('Ongoing Tonotopies')
+    end
     
     h = gcf; % get current figure
     set(h, 'PaperType', 'A4'); 
@@ -101,10 +105,63 @@ for i1 = 1:entries
     close(h)
     
     %% open granular sink best frequency figure
-    % figure('Name','Ongoing Best Frequency') 
+     
     % we should make a plot which shows the progress of the best frequency
     % per animal. One plot with animals as color points with lines 
     % connnecting each day, BF over time[day]. 
+    
+    % figure('Name','Ongoing Best Frequency')
+    
+    % preallocate container for all animal data
+    BFmatrix = zeros(length(Animals),length(Condition));
+    
+    for iAn = 1:length(Animals)
+        cur_cond = 0;
+        % preallocate container for Day BFs
+        dayout = zeros(1,length(Condition));
+        for iDay = 1:length(Condition)
+            
+            % preallocating measurement BF
+            measout = zeros(1,num_meas);
+            for iMe = 1:num_meas
+                if isempty(Data(iMe+cur_cond).(Animals{iAn}).GS_BF)
+                    measout(iMe) = NaN;
+                    disp('There is a NaN BF')
+                else
+                    % get BF from each measurement
+                    measout(iMe) = Data(iMe+cur_cond).(Animals{iAn}).GS_BF;
+                end
+            end % measurement loop
+            
+            cur_cond = cur_cond+num_meas;
+            % average e.g. [ 2 2 4 ] = 2.6667 kHz
+            % & store BF in container
+            dayout(iDay) = nanmean(measout);
+        end % day loop
+        
+        % store day BF data in container for all animals
+        BFmatrix(iAn,:) = dayout;
+    end % animal loop
+    
+    % plot BFs as points over days, per animal. 
+    figure('Name', 'BF per Day')
+    plot(BFmatrix(:,:)','o:','Linewidth',2);
+    legend(Animals)
+    ylabel ('Best Frequency') % double check the unit is correct
+    xlabel ('Day')
+    xticks (1:length(Condition)) % force all ticks to show
+    title('Best Frequency per Day')
+    
+    % save it
+    cd(homedir); cd figs
+    cd('Ongoing Tonotopies')
+    
+    h = gcf; % get current figure
+    set(h, 'PaperType', 'A4'); 
+    set(h, 'PaperOrientation', 'landscape');
+    set(h, 'PaperUnits', 'centimeters');
+    savefig(h,[Group ' BF per Day on Day ' num2str(length(Condition))],'compact') % do we want to overwrite the previous days? Removed length(Condition) from this
+    close(h)
     
     % Note! granular sink BF may not be the best choice for tracking awake
     % animal best frequency responses. If you notice that you have no layer

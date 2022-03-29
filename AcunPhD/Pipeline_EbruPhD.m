@@ -15,9 +15,9 @@ homedir = pwd;
 addpath(genpath(homedir));
 %% TO WATCH THE TONOTOPIES
 
-whichday = 3;
+whichday = 2;
 % full list for days of tonotopy observation
-CondList = {'tono_day1','tono_day2','tono_day3','tono_day2','tono_day3'}; 
+CondList = {'tono_day1','tono_day2','tono_day3','tono_day4','tono_day5'}; 
 % truncate based on which day to let the code know how much to run
 Condition = CondList(1:whichday);
 

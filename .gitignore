@@ -14,6 +14,7 @@ Deane2020/CurranSpectral/Pictures/
 *.pdf
 *.pptx
 *.doc
+*.docx
 
 % Pipelines for specific projects
 Pipeline_KatPhD.m

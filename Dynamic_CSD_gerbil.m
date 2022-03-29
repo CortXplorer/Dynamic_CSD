@@ -66,7 +66,8 @@ for i1 = 1:entries
                     disp(['Analyzing animal: ' name '_' measurement])
                     clear SWEEP
                     try
-                        load ([name '_' measurement]);clear avgFP;
+                        % SWEEP, Spik_list, P, ID, Header, DS
+                        load([name '_' measurement]);clear avgFP;
                     catch
                         fprintf('the name or measurement does not exist/n')
                     end
@@ -75,13 +76,13 @@ for i1 = 1:entries
                     
                     % all of the above is to indicate which animal and
                     % condition is being analyzed
-                    if exist('SWEEP','var') %Acute recordings
+                    if exist('SWEEP','var') % 559 setup
                         clear DATA frqz
                         BL = Header.t_pre*P.Fs_AD(1); %BL-baseline %t_pre is the time before the tone %Fs_AD - Sampling frequency of channels (they are all the same so we use first value)
                         tone = Header.t_sig(1)*P.Fs_AD(1); %t_sig is duration of stimulus * sampling rate = 200
                         frqz = Header.stimlist(:,1); %stimlist contains tone frequencies in all rows (:), first column (:,1)
-                        Fs = P.Fs_AD(1); %sampling rate
-                    else %Chronic recordings
+%                         Fs = P.Fs_AD(1); %sampling rate
+                    else % 505 setup
                         cd (homedir); cd subfunc;
                         %To apply channel interpolation
                         if ~isempty(DATA.ART)
@@ -97,7 +98,7 @@ for i1 = 1:entries
                             end
                         end
                         %To create SWEEP
-                        [BL, tone, Fs, SWEEP, frqz]=reformat(DATA);
+                        [BL, tone, ~, SWEEP, frqz]=reformat(DATA);
                     end
                     
                     %% CSD full
@@ -108,19 +109,19 @@ for i1 = 1:entries
                     [SingleLayer_AVREC,AvgLayer_AVREC,AvgFP, SingleTrialFP, AvgCSD,...
                         SingleTrialCSD, AvgRecCSD, SingleTrialAvgRecCSD,...
                         SingleTrialRelResCSD, AvgRelResCSD,AvgAbsResCSD,...
-                        SingleTrialAbsResCSD, SingleLayerRelRes, AvgLayerRelRes] =...
+                        SingleTrialAbsResCSD, ~, ~, numart] =...
                         SingleTrialCSD_full(SWEEP, str2num(channels{iA}),1:length(str2num(channels{iA})),BL);
                                        
                     %delete empty columns to have the correct amount of stimuli
                     %present (needed for attenuation 30)
-                    SingleLayer_AVREC = SingleLayer_AVREC(~cellfun('isempty',SingleLayer_AVREC'));
+%                     SingleLayer_AVREC = SingleLayer_AVREC(~cellfun('isempty',SingleLayer_AVREC'));
                     SingleTrialFP = SingleTrialFP(~cellfun('isempty',SingleTrialFP'));
                     SingleTrialCSD = SingleTrialCSD(~cellfun('isempty',SingleTrialCSD'));
                     SingleTrialRelResCSD = SingleTrialRelResCSD(~cellfun('isempty',SingleTrialRelResCSD'));
                     AvgAbsResCSD = AvgAbsResCSD(~cellfun('isempty',AvgAbsResCSD'));
                     SingleTrialAbsResCSD = SingleTrialAbsResCSD(~cellfun('isempty',SingleTrialAbsResCSD'));
-                    SingleLayerRelRes = SingleLayerRelRes(~cellfun('isempty',SingleLayerRelRes'));
-                    AvgLayerRelRes = AvgLayerRelRes(~cellfun('isempty',AvgLayerRelRes'));
+%                     SingleLayerRelRes = SingleLayerRelRes(~cellfun('isempty',SingleLayerRelRes'));
+%                     AvgLayerRelRes = AvgLayerRelRes(~cellfun('isempty',AvgLayerRelRes'));
                     SingleTrialAvgRecCSD = SingleTrialAvgRecCSD(~cellfun('isempty',SingleTrialAvgRecCSD'));
                     AvgRelResCSD = AvgRelResCSD(~cellfun('isempty', AvgRelResCSD'));
                     AvgCSD = AvgCSD(~cellfun('isempty', AvgCSD')); AvgCSD=AvgCSD(1:length(frqz));
@@ -137,7 +138,7 @@ for i1 = 1:entries
                     L.VIbE = str2num(Layer.VIbE{iA}); L.VIbL = str2num(Layer.VIbL{iA});
                     L.InfE = str2num(Layer.InfE{iA}); L.InfL = str2num(Layer.InfL{iA});
                     
-                    curChan = str2num(channels{iA});
+%                     curChan = str2num(channels{iA});
                     
                     %Generate Sink Boxes
                     [DUR,RMS,SINGLE_RMS,SINT,PAMP,SINGLE_PAMP,PLAT,SINGLE_PLAT,INT] =...
@@ -345,7 +346,8 @@ for i1 = 1:entries
 %                     savefig(h,[name '_' measurement '_Sink_onset+offset' ],'compact')
 %                     close (h)
 % 
-                    BF = find([PAMP.IVE] == max([PAMP.IVE]));
+                    BF = find([RMS(1:end-2).IVE] == max([RMS(1:end-2).IVE]));
+
 %                     BF_frqz = frqz(BF);
 %                     
 %                     if isnan(BF), BF = 1; end
@@ -476,6 +478,7 @@ for i1 = 1:entries
                     Data(CondIDX).(name).StimDur = tone;
                     Data(CondIDX).(name).Frqz = frqz';
                     Data(CondIDX).(name).GS_BF = frqz(BF);
+                    Data(CondIDX).(name).NumArtTrials = numart;
                     Data(CondIDX).(name).Bandwidth = bandwidth;
                     Data(CondIDX).(name).Tuningwidth = tuningwidth;
                     Data(CondIDX).(name).init_Peak_BF = frqz(find(initPeakTune == max(initPeakTune(1:size(frqz,1)))));
@@ -522,7 +525,7 @@ for i1 = 1:entries
                     set(h, 'PaperUnits', 'centimeters');
                     savefig(h,[name '_' measurement '_RMS Sink tuning' ],'compact')
                     close (h)
-                    
+
 %                     figure('Name',[name ' ' measurement ': ' Condition{iC} ' ' num2str(i4)]);
 %                     plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.I_IIL],'LineWidth',2,'Color','black'),...
 %                         hold on,...
