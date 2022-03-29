@@ -345,7 +345,7 @@ for i1 = 1:entries
 %                     savefig(h,[name '_' measurement '_Sink_onset+offset' ],'compact')
 %                     close (h)
 % 
-%                     BF = find([PAMP.IVE] == max([PAMP.IVE]));
+                    BF = find([PAMP.IVE] == max([PAMP.IVE]));
 %                     BF_frqz = frqz(BF);
 %                     
 %                     if isnan(BF), BF = 1; end
@@ -465,9 +465,9 @@ for i1 = 1:entries
 %                     savefig(h,[name '_' measurement '_Current_flow' ],'compact')
 %                     close (h)
 %                     
-%                     all = [AvgRecCSD{:}];
-%                     all = all(BL+15:BL+50,:);
-%                     initPeakTune = max(all);
+                    all = [AvgRecCSD{:}];
+                    all = all(BL+15:BL+50,:);
+                    initPeakTune = max(all);
                     
                     %% Save and Quit
                     Data(CondIDX).(name).measurement =[name '_' measurement];
@@ -523,24 +523,24 @@ for i1 = 1:entries
                     savefig(h,[name '_' measurement '_RMS Sink tuning' ],'compact')
                     close (h)
                     
-                    figure('Name',[name ' ' measurement ': ' Condition{iC} ' ' num2str(i4)]);
-                    plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.I_IIL],'LineWidth',2,'Color','black'),...
-                        hold on,...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.IVE],'LineWidth',2,'Color','red'),...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VaE],'LineWidth',2,'Color','green'),...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VbE],'LineWidth',2,'Color','blue'),...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VIaE],'LineWidth',2,'Color','magenta'),...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.InfE],'LineWidth',2,'Color','yellow'),...
-                        plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VIaL],'LineWidth',2,'Color','cyan'),...
-                        legend('I/IIL', 'IVE', 'VaE', 'VbE', 'VIaE', 'GS','VIaL')
-                    hold off
-                    h = gcf;
-                    set(gca,'XTickLabel',Data(CondIDX).(name).Frqz,'FontSize',12);
-                    set(h, 'PaperType', 'A4');
-                    set(h, 'PaperOrientation', 'landscape');
-                    set(h, 'PaperUnits', 'centimeters');
-                    savefig(h,[name '_' measurement '_temporal RMS Sink tuning' ],'compact')
-                    close (h)
+%                     figure('Name',[name ' ' measurement ': ' Condition{iC} ' ' num2str(i4)]);
+%                     plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.I_IIL],'LineWidth',2,'Color','black'),...
+%                         hold on,...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.IVE],'LineWidth',2,'Color','red'),...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VaE],'LineWidth',2,'Color','green'),...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VbE],'LineWidth',2,'Color','blue'),...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VIaE],'LineWidth',2,'Color','magenta'),...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.InfE],'LineWidth',2,'Color','yellow'),...
+%                         plot(1:length(frqz),[Data(CondIDX).(name).tempSinkRMS.VIaL],'LineWidth',2,'Color','cyan'),...
+%                         legend('I/IIL', 'IVE', 'VaE', 'VbE', 'VIaE', 'GS','VIaL')
+%                     hold off
+%                     h = gcf;
+%                     set(gca,'XTickLabel',Data(CondIDX).(name).Frqz,'FontSize',12);
+%                     set(h, 'PaperType', 'A4');
+%                     set(h, 'PaperOrientation', 'landscape');
+%                     set(h, 'PaperUnits', 'centimeters');
+%                     savefig(h,[name '_' measurement '_temporal RMS Sink tuning' ],'compact')
+%                     close (h)
                     toc
                 end
             end
